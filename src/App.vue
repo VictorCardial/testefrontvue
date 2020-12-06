@@ -1,32 +1,50 @@
 <template>
   <div id="app">
-    <div id="nav">
-      <router-link to="/">Home</router-link> |
-      <router-link to="/about">About</router-link>
-    </div>
-    <router-view/>
+    <p>
+      Novo curso:
+      <input type="text" v-model="novo" />
+      <button @click="incluir">Inserir</button>
+    </p>
+    <ul>
+      <app-curso-item
+        v-for="(curso, indice) in cursos"
+        @click="excluir(indice)"
+        :key="indice"
+        :value ="curso.nome"
+      >
+        ({{ indice }} - {{ curso.nome }})
+      </app-curso-item>
+      <component :is="componente" value="Fixo">( 9999 )</component>
+    </ul>
   </div>
 </template>
 
-<style>
-#app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-}
+<script>
+import CursoItem from "./components/CursoItem";
 
-#nav {
-  padding: 30px;
-}
-
-#nav a {
-  font-weight: bold;
-  color: #2c3e50;
-}
-
-#nav a.router-link-exact-active {
-  color: #42b983;
-}
-</style>
+export default {
+  name: "app",
+  components: {
+    "app-curso-item": CursoItem,
+  },
+  data() {
+    return {
+      componente: 'app-curso-item',
+      novo: "",
+      cursos: [{ nome: "ADS" }, { nome: "Banco de Dados" }],
+    };
+  },
+  methods: {
+    incluir() {
+      if (this.novo.trim().length == 0) {
+        alert("O nome do curso deve ser preenchido!");
+      } else {
+        this.cursos.push({ nome: this.novo });
+      }
+    },
+    excluir(indice) {
+      this.cursos.splice(indice, 1);
+    },
+  },
+};
+</script>
